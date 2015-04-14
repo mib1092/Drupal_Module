@@ -1,0 +1,4 @@
+name = Custom Module
+description = Block of a weather.
+core = 7.x
+files[] = weather.module
