@@ -1,0 +1,78 @@
+<?php
+
+function custom_block_info(){
+    $blocks['custom'] = array(
+        'info' => "Custom weather block"
+    );
+    return $blocks;
+}
+
+function custom_block_view ($delta = ''){
+    switch($delta) {
+        case 'custom':
+            $block['content'] = block_function();
+            break;
+    }
+    return $block;
+}
+
+function block_function(){
+    $output = theme ('custom_template', array( 'variable' => variable_get('my_custom_town', 'NULL') ));
+    return $output;
+}
+
+function custom_theme(){
+    return array(
+        'custom_template' => array(
+            'template'  => 'custom_template'
+        )
+    );
+}
+
+function custom_menu(){
+    $items['weather_page'] = array(
+        'title'             => 'Weather page',
+        'page callback'     => 'main_function',
+        'access callback'   => TRUE,
+        'menu_name'         => 'main-menu',
+    );
+    return $items;
+}
+
+
+/**
+* Form
+**/
+function my_first_form($form, &$form_state){
+    $form = array();
+    $form['name'] = array(
+        '#type'             => 'textfield',
+        '#title'            => t('Введіть назву міста:'),
+        '#default_value'    => t('Черкаси'),
+    );
+    $form['submit'] = array(
+        '#type'     => 'submit',
+        '#value'    => t('Зберегти'),
+    );
+    return $form;
+}
+
+function main_function(){
+    $form = drupal_get_form('my_first_form');
+    $form = drupal_render($form);
+    return $form;
+}
+
+function my_first_form_validate($form, &$form_state){
+    if(mb_strlen($form_state['values']['name'])<3){
+        form_set_error('name', t('Занадто коротка назва міста.'));
+    }
+}
+
+function my_first_form_submit($form, &$form_state){
+    $name = $form_state['values']['name'];
+    if ($name) {
+        variable_set('my_custom_town', $name);
+        drupal_set_message(t('Налаштування збережено.'));
+    }
+}

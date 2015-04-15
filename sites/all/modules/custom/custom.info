@@ -1,0 +1,4 @@
+name = Custom weather
+description = Weather block on page
+core = 7.x
+files[] = custom.module
